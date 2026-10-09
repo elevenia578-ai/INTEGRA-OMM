@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Programa de Integração — Lojas MM</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{--red:#C8102E;--red-d:#9e0c24;--yel:#FFD100;--ly:#FFF4C2;--text:#222;--muted:#666;--border:#eadfb0;--ok:#2e9e4d;--ok-bg:#e8f7ec;--bad-bg:#fde8ea}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--text);font-family:'DM Sans',Arial,sans-serif;line-height:1.55}
+h1,h2,.header-tag,.section-title,.agenda-titulo{font-family:'Syne',Arial,sans-serif}
+.wrapper{max-width:760px;margin:0 auto;padding:16px 14px 40px}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.muted{color:var(--muted)}
+
+.header{background:var(--red);color:#fff;border-radius:20px;padding:26px 22px;border-bottom:8px solid var(--yel);margin-bottom:14px}
+.header-tag{margin:0 0 6px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--yel);font-weight:700}
+.header h1{margin:0 0 10px;font-size:1.7rem;font-weight:800;line-height:1.15}
+.accent{color:var(--yel)}
+.intro p{margin:0 0 6px;font-size:.95rem}
+
+.next{background:var(--ly);border:2px solid var(--yel);border-radius:14px;padding:12px 14px;margin-bottom:14px;display:flex;gap:12px;align-items:center}
+.next .big{font-size:1.7rem}.next span{display:block;color:var(--muted);font-size:.88rem}
+
+.acc{border:2px solid var(--border);border-radius:16px;margin-bottom:10px;overflow:hidden;background:#fff}
+.acc[open]{border-color:var(--yel)}
+.acc summary{list-style:none;cursor:pointer;padding:14px;display:flex;align-items:center;gap:12px;font-weight:700}
+.acc summary::-webkit-details-marker{display:none}
+.ico{background:var(--yel);border-radius:12px;width:42px;height:42px;display:grid;place-items:center;font-size:1.3rem;flex:none}
+.st small{display:block;font-weight:400;font-size:.82rem;color:var(--muted)}
+.arrow{margin-left:auto;color:var(--red);font-size:1.4rem;transition:transform .2s}
+.acc[open] .arrow{transform:rotate(90deg)}
+.acc-body{padding:0 14px 16px}
+.acc-body ol,.acc-body ul{padding-left:20px}
+
+.vid{display:flex;align-items:center;gap:12px;padding:11px;border:2px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);margin-bottom:8px;transition:border-color .2s}
+.vid:hover{border-color:var(--red);background:#fafafa}
+.play{background:var(--red);color:#fff;border-radius:10px;width:40px;height:40px;display:grid;place-items:center;flex:none;font-size:1.1rem}
+.vid b{display:block;font-size:.95rem}
+.vid small{display:block;color:var(--muted);font-size:.8rem}
+
+.embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin-bottom:10px;background:#000}
+.embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.embed-title{font-weight:700;font-size:.92rem;margin:0 0 6px}
+
+.btn,.search-btn{display:inline-block;background:var(--red);color:#fff;text-decoration:none;padding:11px 16px;border-radius:12px;font-weight:700;font-size:.92rem;margin:4px 8px 4px 0;border:0;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--red-d)}
+.btn.alt{background:var(--yel);color:#222}
+.search-btn:disabled{opacity:.6;cursor:wait}
+.tabs{display:flex;gap:8px;margin:10px 0 12px}
+.tab{flex:1;padding:10px;border-radius:12px;border:2px solid var(--border);background:#fff;font-weight:700;cursor:pointer;font-family:inherit}
+.tab.on{background:var(--red);color:#fff;border-color:var(--red)}
+.pane{display:none}.pane.on{display:block}
+.tip{background:var(--ly);border-left:5px solid var(--yel);border-radius:8px;padding:10px 12px;font-size:.88rem;margin-top:10px}
+
+.search-label{display:block;font-weight:700;margin-bottom:6px}
+.search-row{display:flex;gap:8px}
+.search-input{flex:1;padding:12px;border:2px solid var(--border);border-radius:12px;font-size:1rem;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--red)}
+.search-row .search-btn{margin:0}
+
+.section-card{border:2px solid var(--border);border-radius:16px;padding:14px;margin-top:14px}
+.employee-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.employee-name-block h2{margin:0;font-size:1.15rem}.employee-name-block p{margin:2px 0 0;color:var(--muted);font-size:.88rem}
+.badge{padding:5px 12px;border-radius:99px;font-size:.8rem;font-weight:700}
+.badge-complete{background:var(--ok-bg);color:var(--ok)}
+.badge-partial{background:var(--ly);color:#8a6d00}
+.badge-start{background:var(--bad-bg);color:var(--red)}
+.progress-block{margin:14px 0}
+.progress-header{display:flex;justify-content:space-between;font-size:.9rem;margin-bottom:6px}
+.progress-count{font-weight:700}.progress-total{font-weight:400;color:var(--muted)}
+.progress-bar-bg{background:#eee;border-radius:99px;height:12px;overflow:hidden}
+.progress-bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--yel));transition:width .6s}
+.section-title{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin:14px 0 8px;font-weight:700}
+.themes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.theme-item{border:2px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;font-size:.8rem}
+.theme-icon{font-size:1.4rem}.theme-name{font-weight:700}
+.theme-item.done{background:var(--ok-bg);border-color:var(--ok)}
+.theme-item.missing .theme-icon{filter:grayscale(1);opacity:.5}
+
+.agenda-titulo{font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.agenda-mes-badge{background:var(--red);color:#fff;border-radius:99px;padding:3px 10px;font-size:.78rem}
+.agenda-header-row,.agenda-row{display:grid;grid-template-columns:1fr 64px 76px 28px;gap:8px;padding:9px 6px;align-items:center;font-size:.88rem}
+.agenda-header-row.simple,.agenda-row.simple{grid-template-columns:1fr 64px 76px}
+.agenda-header-row{background:var(--red);color:#fff;border-radius:10px;font-weight:700}
+.agenda-row{border-bottom:1px solid var(--border)}
+.agenda-row.feito{background:var(--ok-bg)}.agenda-row.pendente{background:#fffdf3}
+.agenda-curso{font-weight:700}
+.agenda-legenda{display:flex;gap:16px;margin-top:10px;font-size:.82rem;color:var(--muted);flex-wrap:wrap}
+
+.msg-box{background:var(--ly);border-left:5px solid var(--yel);border-radius:10px;padding:12px 14px;margin-top:14px}
+.msg-box strong{display:block}
+.msg-error{background:var(--bad-bg);border-color:var(--red)}
+.spinner-wrapper{display:flex;justify-content:center;padding:24px}
+.spinner{width:34px;height:34px;border:4px solid var(--ly);border-top-color:var(--red);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:22px}
+@media(max-width:480px){.search-row{flex-direction:column}.search-row .search-btn{width:100%}}
+
+.explain{border-left:6px solid var(--red);background:var(--ly);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.explain h3{margin:0 0 4px;font-size:1rem;font-family:'Syne',Arial,sans-serif;color:var(--red)}
+.explain p{margin:0 0 6px}.explain p:last-child{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{background:#fff;border:2px solid var(--yel);border-radius:99px;padding:3px 10px;font-size:.8rem;font-weight:700}
+.empty{color:var(--muted);font-size:.88rem;padding:8px 0}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header class="header">
+    <p class="header-tag">Programa de Integração</p>
+    <h1>Seu guia de <span class="accent">integração</span></h1>
+    <div id="intro" class="intro">
+      <p>Seja muito bem-vindo(a) ao seu guia de integração das Lojas MM!</p>
+      <p>Aqui você tira suas principais dúvidas sobre como acessar a integração ao longo do mês, até a finalização.</p>
+    </div>
+  </header>
+
+  <div class="next" id="next" aria-live="polite"></div>
+
+  <main>
+
+    <details class="acc" open>
+      <summary><span class="ico">💡</span><span class="st">Entenda sua integração<small>O que é a Trilha e o que é o E-PIMM</small></span><span class="arrow">›</span></summary>
+      <div class="acc-body">
+        <div class="explain">
+          <h3>🚀 O que é a Trilha dos Primeiros Passos?</h3>
+          <p>É o pontapé inicial na Lojas MM. Nela você conhece a nossa <b>cultura</b> e os nossos <b>processos</b>.</p>
+          <p><b>Muito importante:</b> concluir a trilha é primordial para a <b>liberação dos seus acessos</b>. É rápida e você faz logo no seu primeiro dia.</p>
+        </div>
+        <div class="explain">
+          <h3>🎓 O que é o E-PIMM?</h3>
+          <p>É o programa de integração <b>obrigatório</b>, <b>online e ao vivo</b>. Acontece sempre às <b>segundas, terças e quartas</b>, das <b>9h10 às 10h10</b>, durante <b>3 semanas</b>, começando na primeira segunda-feira do mês.</p>
+          <div class="chips"><span class="chip">Ao vivo</span><span class="chip">Seg · Ter · Qua</span><span class="chip">9h10–10h10</span><span class="chip">3 semanas</span></div>
+        </div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span class="ico">🧭</span><span class="st">Como acompanhar sua integração<small>Vídeos e visão geral</small></span><span class="arrow">›</span></summary>
+      <div class="acc-body"><div id="v-acompanhar" class="empty">Carregando vídeos…</div></div>
+    </details>
+
+    <details class="acc">
+      <summary><span class="ico">🚀</span><span class="st">Trilha dos Primeiros Passos<small>Obrigatória para liberar seus acessos</small></span><span class="arrow">›</span></summary>
+      <div class="acc-body">
+        <p class="muted">Rápida, feita no seu primeiro dia. Conclua para liberar seus acessos.</p>
+        <div id="v-trilha" class="empty">Carregando vídeos…</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span class="ico">🎓</span><span class="st">E-PIMM — como acessar<small>Ao vivo · seg a qua · 9h10 às 10h10</small></span><span class="arrow">›</span></summary>
+      <div class="acc-body">
+        <p class="muted">O E-PIMM é <b>ao vivo</b> (seg, ter e qua, 9h10 às 10h10). Entre no sistema no horário.</p>
+        <div class="tabs">
+          <button class="tab on" data-p="pc">💻 Computador</button>
+          <button class="tab" data-p="cel">📱 Celular</button>
+        </div>
+        <div class="pane on" id="pc">
+          <ol><li>Abra o link da Universidade no navegador</li><li>Entre com seu usuário e senha</li><li>Localize o E-PIMM do mês e participe</li></ol>
+          <div id="v-computador" class="empty">Carregando vídeos…</div>
+        </div>
+        <div class="pane" id="cel">
+          <ol><li>Baixe o aplicativo <b>Konviva</b> na loja</li><li>Entre com seu usuário e senha</li><li>Localize o E-PIMM do mês e toque para participar</li></ol>
+          <div id="v-celular" class="empty">Carregando vídeos…</div>
+          <div class="tip">⚠️ No celular, o acesso é somente pelo aplicativo Konviva.</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span class="ico">📅</span><span class="st">Agenda do mês<small>Cursos, datas e horários</small></span><span class="arrow">›</span></summary>
+      <div class="acc-body" id="agenda-geral"><p class="empty">Carregando agenda…</p></div>
+    </details>
+
+    <details class="acc" open>
+      <summary><span class="ico">✅</span><span class="st">Minha presença<small>Digite sua matrícula</small></span><span class="arrow">›</span></summary>
+      <div class="acc-body">
+        <section>
+          <label class="search-label" for="matricula">Sua matrícula</label>
+          <div class="search-row">
+            <input type="text" id="matricula" class="search-input" placeholder="Ex: 25158" maxlength="10" inputmode="numeric" autocomplete="off" />
+            <button type="button" id="btn-consultar" class="search-btn">Consultar</button>
+          </div>
+        </section>
+        <div id="result" aria-live="polite"></div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span class="ico">💬</span><span class="st">Dúvidas?<small>Fale com a gente</small></span><span class="arrow">›</span></summary>
+      <div class="acc-body"><p id="contato">Fale com o RH ou com o seu gestor.</p></div>
+    </details>
+
+  </main>
+  <footer class="footer">Estamos felizes em ter você com a gente! ❤️💛</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var CONFIG = {
+    url: 'https://script.google.com/macros/s/AKfycbzk2WE5AHUneJG4paPnN3k1aSlIKyhbVItG5RpuWvAiBYXmtNfy-RG2CLl6np51dInr/exec',
+    timeoutMs: 15000,
+    abas: {
+      presenca: 'Presenças',
+      agenda:   'Calendário do mes _do_Mes',
+      videos:   'Videos',
+      config:   'Configuracoes',
+      leiame:   'Leia-me'
+    },
+    col: { filial: 0, regiao: 1, matricula: 2, temasInicio: 5 },
+    temas: ['Cultura','Projeto Engrenagem','Jornada','Benefícios','Sistemas','Web Vendas','PRA','VEN','DER','Excelência Comercial','Diretoria Adm e Logística','Gestão Comercial'],
+    icones: ['🌱','⚙️','🗺️','🎁','💻','🛒','📋','💰','📦','🏆','🏢','📊'],
+    mapaAgenda: [['jornada','Jornada'],['engrenagem','Projeto Engrenagem'],['cultura','Cultura'],['beneficio','Benefícios'],['sistema','Sistemas'],['web venda','Web Vendas'],['pra','PRA'],['ven','VEN'],['der','DER'],['excelencia','Excelência Comercial'],['diretoria','Diretoria Adm e Logística'],['gestao comercial','Gestão Comercial']]
+  };
+
+  var MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function norm(s){ return String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,'').trim(); }
+
+  /* ---------- JSONP (evita problema de CORS do Apps Script) ---------- */
+  function fetchAba(aba){
+    return new Promise(function(resolve, reject){
+      var cb = 'cb' + Date.now() + Math.floor(Math.random()*100000);
+      var s = document.createElement('script');
+      var timer = setTimeout(function(){ cleanup(); reject(new Error('Tempo esgotado')); }, CONFIG.timeoutMs);
+
+      function cleanup(){
+        clearTimeout(timer);
+        try { delete window[cb]; } catch(e) { window[cb] = undefined; }
+        if (s.parentNode) s.parentNode.removeChild(s);
+      }
+
+      window[cb] = function(dados){
+        cleanup();
+        if (dados && dados.erro) reject(new Error(dados.erro));
+        else resolve(Array.isArray(dados) ? dados : []);
+      };
+
+      s.onerror = function(){ cleanup(); reject(new Error('Falha de rede')); };
+      s.src = CONFIG.url + '?aba=' + encodeURIComponent(aba) + '&callback=' + cb;
+      document.head.appendChild(s);
+    });
+  }
+  function fetchSafe(aba){ return fetchAba(aba).catch(function(){ return []; }); }
+
+  /* ---------- Próximo E-PIMM ---------- */
+  function addDays(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function firstMonday(y,m){ var d=new Date(y,m,1); while(d.getDay()!==1) d.setDate(d.getDate()+1); return d; }
+  function fmt(d){ return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear(); }
+
+  function renderNext(){
+    var hoje=new Date(); hoje.setHours(0,0,0,0);
+    var ini=firstMonday(hoje.getFullYear(),hoje.getMonth());
+    if (hoje > addDays(ini,16)) ini = firstMonday(hoje.getFullYear(), hoje.getMonth()+1);
+    var rolando = hoje>=ini && hoje<=addDays(ini,16);
+    $('next').innerHTML = rolando
+      ? '<div class="big">🔴</div><div><b>O E-PIMM de '+MESES[ini.getMonth()]+' está acontecendo!</b><span>Seg a qua, 9h10 às 10h10, ao vivo.</span></div>'
+      : '<div class="big">📅</div><div><b>Próximo E-PIMM: '+fmt(ini)+' às 9h10</b><span>Começa na 1ª segunda-feira de '+MESES[ini.getMonth()]+' e dura 3 semanas.</span></div>';
+  }
+
+  /* ---------- Vídeos ---------- */
+  var MAPA_CATEGORIA = {
+    'acompanhar':'v-acompanhar',
+    'trilha':'v-trilha',
+    'computador':'v-computador',
+    'celular':'v-celular'
+  };
+
+  function youtubeId(url){
+    var u = String(url||'');
+    var m = u.match(/[?&]v=([\w-]{6,})/) || u.match(/youtu\.be\/([\w-]{6,})/) || u.match(/embed\/([\w-]{6,})/);
+    return m ? m[1] : '';
+  }
+
+  function renderVideos(rows){
+    var buckets = {};
+    Object.keys(MAPA_CATEGORIA).forEach(function(k){ buckets[MAPA_CATEGORIA[k]] = []; });
+
+    for (var i=1;i<rows.length;i++){
+      var r = rows[i] || [];
+      var cat = norm(r[0]), titulo = r[1], url = r[2], dur = r[3];
+      if (!titulo || !url) continue;
+      var alvo = null;
+      Object.keys(MAPA_CATEGORIA).forEach(function(k){ if (cat.indexOf(k)!==-1) alvo = MAPA_CATEGORIA[k]; });
+      if (!alvo) continue;
+      buckets[alvo].push({ titulo: titulo, url: url, dur: dur });
+    }
+
+    Object.keys(buckets).forEach(function(id){
+      var el = $(id); if (!el) return;
+      var lista = buckets[id];
+      if (!lista.length){ el.className='empty'; el.innerHTML='Nenhum vídeo cadastrado para esta seção.'; return; }
+      el.className='';
+      el.innerHTML = lista.map(function(v){
+        var yid = youtubeId(v.url);
+        if (yid){
+          return '<p class="embed-title">▶️ '+esc(v.titulo)+(v.dur?' <span class="muted">· '+esc(v.dur)+'</span>':'')+'</p>'+
+                 '<div class="embed"><iframe src="https://www.youtube.com/embed/'+esc(yid)+'?rel=0" '+
+                 'title="'+esc(v.titulo)+'" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>';
+        }
+        return '<a class="vid" href="'+esc(v.url)+'" target="_blank" rel="noopener">'+
+               '<span class="play">▶</span><span><b>'+esc(v.titulo)+'</b>'+(v.dur?'<small>'+esc(v.dur)+'</small>':'')+'</span></a>';
+      }).join('');
+    });
+  }
+
+  function videosVazio(){
+    Object.keys(MAPA_CATEGORIA).forEach(function(k){
+      var el=$(MAPA_CATEGORIA[k]); if(el){ el.className='empty'; el.innerHTML='Não foi possível carregar os vídeos agora.'; }
+    });
+  }
+
+  /* ---------- Agenda ---------- */
+  function formatarData(v){
+    if(!v) return '';
+    var s=String(v);
+    if(s.indexOf('T')!==-1){ var p=s.split('T')[0].split('-'); if(p.length===3) return p[2]+'/'+p[1]; }
+    return s;
+  }
+  function agendaParaTema(curso){
+    var n=norm(curso);
+    for(var i=0;i<CONFIG.mapaAgenda.length;i++){ if(n.indexOf(CONFIG.mapaAgenda[i][0])!==-1) return CONFIG.mapaAgenda[i][1]; }
+    return null;
+  }
+  function parseAgenda(rows){
+    var dados=[];
+    for(var i=1;i<rows.length;i++){ var r=rows[i]||[]; if(r[0]) dados.push(r); }
+    return { titulo:'Agenda de '+MESES[new Date().getMonth()], dados:dados };
+  }
+  function renderAgendaGeral(rows){
+    var ag=parseAgenda(rows);
+    if(!ag.dados.length){ $('agenda-geral').innerHTML='<p class="empty">Agenda ainda não publicada.</p>'; return; }
+    $('agenda-geral').innerHTML =
+      '<div class="agenda-titulo">'+esc(ag.titulo)+'</div>'+
+      '<div class="agenda-header-row simple"><div>Curso</div><div>Data</div><div>Horário</div></div>'+
+      ag.dados.map(function(r){
+        return '<div class="agenda-row simple"><div class="agenda-curso">'+esc(r[0])+'</div><div>'+esc(formatarData(r[1]))+'</div><div>'+esc(r[2]||'')+'</div></div>';
+      }).join('');
+  }
+
+  /* ---------- Presença ---------- */
+  function renderTemas(ps){
+    return ps.map(function(p){
+      return '<div class="theme-item '+(p.presente?'done':'missing')+'"><div class="theme-icon">'+p.icone+'</div><div class="theme-name">'+esc(p.tema)+'</div></div>';
+    }).join('');
+  }
+
+  function renderResultado(mat, linha, agendaRows){
+    var c=CONFIG.col;
+    var presencas = CONFIG.temas.map(function(t,i){
+      return { tema:t, icone:CONFIG.icones[i], presente: String(linha[c.temasInicio+i]||'').toLowerCase().indexOf('presente')!==-1 };
+    });
+    var feitos = presencas.filter(function(p){return p.presente;}).length;
+    var total = CONFIG.temas.length, pct = Math.round(feitos/total*100);
+
+    var bc,bl;
+    if(feitos===total){bc='badge-complete';bl='Ciclo Completo ✓';}
+    else if(feitos===0){bc='badge-start';bl='Não iniciado';}
+    else {bc='badge-partial';bl='Em andamento';}
+
+    var ag=parseAgenda(agendaRows), feitosSet={};
+    presencas.forEach(function(p){ if(p.presente) feitosSet[p.tema]=true; });
+
+    var pend=0;
+    var linhasAg = ag.dados.map(function(r){
+      var tema=agendaParaTema(r[0]), jaFez = tema? !!feitosSet[tema] : false;
+      if(!jaFez) pend++;
+      return '<div class="agenda-row '+(jaFez?'feito':'pendente')+'"><div class="agenda-curso">'+esc(r[0])+'</div><div>'+esc(formatarData(r[1]))+'</div><div>'+esc(r[2]||'')+'</div><div>'+(jaFez?'✅':'⚠️')+'</div></div>';
+    }).join('');
+
+    var badgeAg = pend>0 ? '<span class="agenda-mes-badge">'+pend+' pendente'+(pend>1?'s':'')+'</span>'
+                         : '<span class="badge badge-complete">Todos assistidos ✓</span>';
+
+    $('result').innerHTML =
+      '<div class="section-card"><div class="employee-meta"><div class="employee-name-block"><h2>Matrícula '+esc(mat)+'</h2>'+
+      '<p>Filial '+esc(linha[c.filial]||'—')+' &nbsp;·&nbsp; '+esc(linha[c.regiao]||'—')+'</p></div>'+
+      '<span class="badge '+bc+'">'+bl+'</span></div>'+
+      '<div class="progress-block"><div class="progress-header"><span>Temas concluídos</span>'+
+      '<span class="progress-count">'+feitos+' <span class="progress-total">/ '+total+' temas</span></span></div>'+
+      '<div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar"></div></div></div>'+
+      '<div class="section-title">Detalhamento por tema</div>'+
+      '<div class="themes-grid">'+renderTemas(presencas)+'</div></div>'+
+      (linhasAg ? '<div class="section-card"><div class="agenda-titulo">'+esc(ag.titulo)+badgeAg+'</div>'+
+      '<div class="agenda-header-row"><div>Curso</div><div>Data</div><div>Horário</div><div></div></div>'+linhasAg+
+      '<div class="agenda-legenda"><div>⚠️ Você ainda não assistiu</div><div>✅ Você já assistiu</div></div></div>' : '');
+
+    setTimeout(function(){ var pb=$('pbar'); if(pb) pb.style.width=pct+'%'; },50);
+  }
+
+  function msg(t,x,erro){ $('result').innerHTML='<div class="msg-box'+(erro?' msg-error':'')+'"><strong>'+esc(t)+'</strong>'+esc(x)+'</div>'; }
+
+  function buscar(){
+    var input=$('matricula'), mat=input.value.trim(), btn=$('btn-consultar');
+    if(!mat){ msg('Campo vazio','Digite sua matrícula para consultar.'); input.focus(); return; }
+    btn.disabled=true;
+    $('result').innerHTML='<div class="spinner-wrapper"><div class="spinner"></div></div>';
+
+    Promise.all([fetchAba(CONFIG.abas.presenca), fetchSafe(CONFIG.abas.agenda)])
+      .then(function(res){
+        var pres=res[0], linha=null;
+        for(var i=1;i<pres.length;i++){
+          if(String(pres[i][CONFIG.col.matricula]||'').trim()===mat){ linha=pres[i]; break; }
+        }
+        if(!linha){ msg('Matrícula não encontrada','Verifique o número digitado e tente novamente.'); return; }
+        renderResultado(mat, linha, res[1]);
+      })
+      .catch(function(e){ msg('Erro ao carregar dados', e.message, true); })
+      .finally(function(){ btn.disabled=false; });
+  }
+
+  /* ---------- Init ---------- */
+  document.addEventListener('DOMContentLoaded', function(){
+    renderNext();
+
+    document.querySelectorAll('.tab').forEach(function(t){
+      t.addEventListener('click', function(){
+        document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('on'); });
+        document.querySelectorAll('.pane').forEach(function(x){ x.classList.remove('on'); });
+        t.classList.add('on'); $(t.dataset.p).classList.add('on');
+      });
+    });
+
+    $('btn-consultar').addEventListener('click', buscar);
+    $('matricula').addEventListener('keydown', function(e){ if(e.key==='Enter') buscar(); });
+
+    fetchAba(CONFIG.abas.videos).then(function(r){ if(r.length>1) renderVideos(r); else videosVazio(); }).catch(videosVazio);
+    fetchSafe(CONFIG.abas.agenda).then(function(r){ if(r.length>1) renderAgendaGeral(r); else $('agenda-geral').innerHTML='<p class="empty">Agenda indisponível no momento.</p>'; });
+  });
+})();
+</script>
+</body>
+</html>
